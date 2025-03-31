@@ -26,7 +26,7 @@ def lambda_handler(event, context):
     Returns:
         dict: Response containing the status code and message body.
     """
-    # Set Chrome options for headless browsing
+    # Set Chrome options for headless browsing and some other performance related settings
     chrome_options = ChromeOptions()
     chrome_options.add_argument("--headless=new")
     chrome_options.add_argument("--no-sandbox")
@@ -41,12 +41,13 @@ def lambda_handler(event, context):
     chrome_options.add_argument("--remote-debugging-pipe")
     chrome_options.add_argument("--verbose")
     chrome_options.add_argument("--log-path=/tmp")
-    chrome_options.binary_location = "/opt/chrome/chrome-linux64/chrome"
-    url = 'https://cuandollega.smartmovepro.net/moqsa/arribos/?codLinea=92&idParada=MO-01076'
+    chrome_options.binary_location = "/opt/chrome/chrome-linux64/chrome" #Chrome location within the function
+    
+    url = 'https://cuandollega.smartmovepro.net/moqsa/arribos/?codLinea=92&idParada=MO-01076' #OPTIONAL: Moqsa web URL, change if other bus stop is wished to be scraped
 
     # Set up ChromeDriver service
     service = Service(
-        executable_path="/opt/chromedriver/chromedriver-linux64/chromedriver",
+        executable_path="/opt/chromedriver/chromedriver-linux64/chromedriver", #Chromedriver path
         service_log_path="/tmp/chromedriver.log"
     )
 
