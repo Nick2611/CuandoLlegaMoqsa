@@ -16,4 +16,4 @@ mkdir -p "/opt/chromedriver"
 curl -Lo "$download_path_chrome_driver_linux" "$chromedriver_linux_url"
 unzip -q "$download_path_chrome_driver_linux" -d "/opt/chromedriver"
 rm -rf "$download_path_chrome_driver_linux"
-chmod +x "/opt/chromedriver/chromedriver-linux64/chromedriver" # Add this line
+chmod +x "/opt/chromedriver/chromedriver-linux64/chromedriver" 
