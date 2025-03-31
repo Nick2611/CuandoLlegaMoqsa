@@ -1,5 +1,5 @@
 import os
-import boto3  # Import Boto3
+import boto3 
 
 import selenium
 from selenium import webdriver
@@ -11,8 +11,8 @@ from tempfile import mkdtemp
 
 from selenium.webdriver.support.wait import WebDriverWait
 
-sns_client = boto3.client('sns')  # Initialize SNS client
-sns_topic_arn = os.environ['SNS_TOPIC_ARN']  # Get SNS topic ARN from environment variable
+sns_client = boto3.client('sns')  
+sns_topic_arn = os.environ['SNS_TOPIC_ARN']  
 
 
 def lambda_handler(event, context):
@@ -34,7 +34,7 @@ def lambda_handler(event, context):
     url = 'https://cuandollega.smartmovepro.net/moqsa/arribos/?codLinea=92&idParada=MO-01076'
 
     service = Service(
-        executable_path="/opt/chromedriver/chromedriver-linux64/chromedriver",  # changed path
+        executable_path="/opt/chromedriver/chromedriver-linux64/chromedriver", 
         service_log_path="/tmp/chromedriver.log"
     )
 
@@ -44,11 +44,9 @@ def lambda_handler(event, context):
     )
 
     try:
-        # Open the webpage
         driver.get(url)
 
         try:
-            # Wait for the dataArribos to load
             container = WebDriverWait(driver, 30).until(
                 EC.presence_of_element_located((By.ID, 'arribosContainer'))
             )
@@ -84,14 +82,13 @@ def lambda_handler(event, context):
             driver.quit()
 
     try:
-        # Publish the message to SNS
         response = sns_client.publish(
             TopicArn=sns_topic_arn,
             Message=mensaje,
             MessageAttributes={
                 'AWS.SNS.SMS.SenderID': {
                     'DataType': 'String',
-                    'StringValue': 'LambdaAlert'  # Optional sender ID
+                    'StringValue': 'LambdaAlert'  
                 }
             }
         )
