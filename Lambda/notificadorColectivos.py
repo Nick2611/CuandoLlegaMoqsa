@@ -1,5 +1,5 @@
 import os
-import boto3 
+import boto3  # Import Boto3 for AWS services
 
 import selenium
 from selenium import webdriver
@@ -11,11 +11,22 @@ from tempfile import mkdtemp
 
 from selenium.webdriver.support.wait import WebDriverWait
 
-sns_client = boto3.client('sns')  
-sns_topic_arn = os.environ['SNS_TOPIC_ARN']  
-
+# Initialize the SNS client
+sns_client = boto3.client('sns')
+sns_topic_arn = os.environ['SNS_TOPIC_ARN']
 
 def lambda_handler(event, context):
+    """
+    AWS Lambda handler function to scrape bus arrival times and send notifications via SNS.
+
+    Args:
+        event (dict): Event data passed by AWS Lambda.
+        context (object): Runtime information provided by AWS Lambda.
+
+    Returns:
+        dict: Response containing the status code and message body.
+    """
+    # Set Chrome options for headless browsing
     chrome_options = ChromeOptions()
     chrome_options.add_argument("--headless=new")
     chrome_options.add_argument("--no-sandbox")
@@ -33,23 +44,28 @@ def lambda_handler(event, context):
     chrome_options.binary_location = "/opt/chrome/chrome-linux64/chrome"
     url = 'https://cuandollega.smartmovepro.net/moqsa/arribos/?codLinea=92&idParada=MO-01076'
 
+    # Set up ChromeDriver service
     service = Service(
-        executable_path="/opt/chromedriver/chromedriver-linux64/chromedriver", 
+        executable_path="/opt/chromedriver/chromedriver-linux64/chromedriver",
         service_log_path="/tmp/chromedriver.log"
     )
 
+    # Initialize the WebDriver
     driver = webdriver.Chrome(
         service=service,
         options=chrome_options
     )
 
     try:
+        # Navigate to the URL
         driver.get(url)
 
         try:
+            # Wait for the container element to be present
             container = WebDriverWait(driver, 30).until(
                 EC.presence_of_element_located((By.ID, 'arribosContainer'))
             )
+            # Find sub-elements containing arrival times
             sub_elements = container.find_elements(By.CLASS_NAME, "mdl-card--horizontal")
 
             tiemposLlegada = []
@@ -58,6 +74,7 @@ def lambda_handler(event, context):
                 tiempoLlegada = datosLlegada[2]
                 tiemposLlegada.append(tiempoLlegada)
 
+            # Prepare the message based on arrival times
             if not tiemposLlegada:
                 mensaje = "No hay colectivos en camino"
             else:
@@ -78,17 +95,19 @@ def lambda_handler(event, context):
         print(mensaje)
 
     finally:
+        # Ensure the WebDriver is quit
         if 'driver' in locals():
             driver.quit()
 
     try:
+        # Publish the message to SNS
         response = sns_client.publish(
             TopicArn=sns_topic_arn,
             Message=mensaje,
             MessageAttributes={
                 'AWS.SNS.SMS.SenderID': {
                     'DataType': 'String',
-                    'StringValue': 'LambdaAlert'  
+                    'StringValue': 'LambdaAlert'
                 }
             }
         )
