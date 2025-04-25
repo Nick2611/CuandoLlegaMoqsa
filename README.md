@@ -8,7 +8,7 @@ Para mayor comodidad de sus pasajeros, la compañía cuenta con una página web 
 
 La problemática que aborda este programa surge del hecho de que la página de Moqsa no ofrece ninguna opción para notificar a los usuarios cuando el colectivo está cerca de su parada. Esto puede generar inconvenientes, especialmente cuando una persona está distraída y ocupada con otras actividades, aumentando el riesgo de que pierda su colectivo por no estar atenta a su llegada.
 
-**foto1**
+![Image](https://github.com/user-attachments/assets/967ab0c6-5c60-4c2e-929a-a9611f809df7)
 
 ## Arquitectura de AWS
 
