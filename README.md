@@ -15,7 +15,8 @@ La problemática que aborda este programa surge del hecho de que la página de M
 Aunque se trata de una solución sencilla, se busca implementar una arquitectura que permita la ejecución automática de la función en intervalos definidos por el usuario, tantas veces como sea necesario. Además, se procura minimizar el uso de servicios para optimizar costos y facilitar su comprensión.
 
 Listado de servicios utilizados:  
-**foto2**
+
+![Image](https://github.com/user-attachments/assets/572004cf-2949-494f-a9c3-149bd4a2c4e7)
 
 * **Amazon EventBridge Scheduler**: Servicio que permite programar la ejecución de tareas en momentos específicos o en intervalos regulares. En este caso, se usa para activar la función Lambda en el horario definido.
 
@@ -46,7 +47,7 @@ Dentro de los container se hallaran los próximos arribos del ramal elegido, inf
 
 * El ARN (Amazon Resource Name, identificador único de los tópicos SNS) del tópico se encuentra especificado como variable de entorno 
 
-**foto3**
+![Image](https://github.com/user-attachments/assets/18dd1667-97b5-4bcc-b4e5-d79216f3ec0a)
 
 * Los paths de instalación están especificados en el bash de instalación de chrome y chromedriver, script el cual se abordará más adelante en el documento
 
@@ -235,18 +236,20 @@ Antes de crear el cron job para la ejecución automática es necesario crear una
 
 Buscando Lambda en la consola de AWS, se nos brindara la opción de crear una nueva función Lambda
 
-**foto4**
+![Image](https://github.com/user-attachments/assets/f9274c9a-a16e-4dbf-8ea8-b9a97c359298)
 
 ### Paso 2- Definir parámetros de la función
 
 Para continuar con este paso, debemos haber realizado el push de la Docker image a ECR para poder utilizarla con la función Lambda
 
 Elegimos Container Image para asignar la Docker Image a la función  
-**foto5**
+
+![Image](https://github.com/user-attachments/assets/6ca68a09-7e32-45d8-8367-0ff0da2dbbf1)
 
 Seleccionamos Browse images y elegimos nuestro repositorio de ECR donde esta la imagen de nuestro programa, marcamos la imagen para continuar
 
-**foto6**  
+![Image](https://github.com/user-attachments/assets/3a449e27-0938-415d-b579-ab181b67c8c4)
+
 Una vez asignada a la imagen, se procede a clickear el botón “Crear función” para finalizar con la creación del Lambda.
 
 ### Crear el lambda trigger con EventBridge
@@ -267,14 +270,16 @@ Donde:
 * **\*** significa cualquier valor válido
 
 Al final de los pasos, nuestra configuración debe resultar de la siguiente manera y estará lista para ser creada y utilizada con la función  
-**foto7**
+
+![Image](https://github.com/user-attachments/assets/60191e8b-41e9-4c0a-95ca-9cd78b733d59)
 
 ## Creación del SNS Topic y Test del script
 
 Finalmente, la forma más óptima y barata de utilizar el script para el beneficio de los usuarios registrados es publicar los horarios vía mail con un SNS Topic. El tier gratuito de AWS garantiza que los primeros 100.000 emails son totalmente gratuitos, lo cual para los propósitos y el scope general que va a tener esta función implica que seremos notificados de forma gratuita de los horarios del ramal seleccionado.
 
 Dentro de SNS, en el apartado Topics, buscamos la opción de **Create topic** y se ha de seleccionar en el tipo de tópico el **Standard**, debido a que es el que permite subscribirse al mismo via Mail  
-**foto8**
+
+![Image](https://github.com/user-attachments/assets/7dc5b669-10f6-4eed-9be9-29c961ab7dad)
 
 No es necesario realizar más modificaciones.
 
@@ -282,7 +287,8 @@ Una vez creado, se ha de crear una suscripción a él con un correo electrónico
 Desde el apartado de Subscriptions dentro de Amazon SNS, se clickea en la opción de Create subscription y se elige el topic ARN del tópico recién creado. A continuación, se ha de ingresar un mail al que se disponga acceso debido a que se enviará un mail de confirmación de suscripción al tópico
 
 Se debe utilizar el ARN del tópico a suscribir.  
-**foto9**
+
+![Image](https://github.com/user-attachments/assets/a448009e-f0cc-4701-958b-6570dec11f28)
 
 ### Importante
 
@@ -290,4 +296,4 @@ Se debe utilizar el ARN del tópico a suscribir.
 
 Una vez creado el tópico y confirmada la suscripción, solo queda agregar el Topic ARN a la función Lambda para recibir notificaciones sobre los tiempos de espera de los colectivos cada vez que se ejecute.
 
-**foto10**  
+![Image](https://github.com/user-attachments/assets/df8a100b-08b7-428d-b641-982b57fb006e)
