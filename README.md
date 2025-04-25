@@ -8,14 +8,14 @@ Para mayor comodidad de sus pasajeros, la compañía cuenta con una página web 
 
 La problemática que aborda este programa surge del hecho de que la página de Moqsa no ofrece ninguna opción para notificar a los usuarios cuando el colectivo está cerca de su parada. Esto puede generar inconvenientes, especialmente cuando una persona está distraída y ocupada con otras actividades, aumentando el riesgo de que pierda su colectivo por no estar atenta a su llegada.
 
-https://github.com/Nick2611/CuandoLlegaMoqsa/blob/main/fotos_documentacion_lambda/foto1.png
+**foto1**
 
 ## Arquitectura de AWS
 
 Aunque se trata de una solución sencilla, se busca implementar una arquitectura que permita la ejecución automática de la función en intervalos definidos por el usuario, tantas veces como sea necesario. Además, se procura minimizar el uso de servicios para optimizar costos y facilitar su comprensión.
 
 Listado de servicios utilizados:  
-https://github.com/Nick2611/CuandoLlegaMoqsa/blob/main/fotos_documentacion_lambda/foto2.png
+**foto2**
 
 * **Amazon EventBridge Scheduler**: Servicio que permite programar la ejecución de tareas en momentos específicos o en intervalos regulares. En este caso, se usa para activar la función Lambda en el horario definido.
 
@@ -46,7 +46,7 @@ Dentro de los container se hallaran los próximos arribos del ramal elegido, inf
 
 * El ARN (Amazon Resource Name, identificador único de los tópicos SNS) del tópico se encuentra especificado como variable de entorno 
 
-https://github.com/Nick2611/CuandoLlegaMoqsa/blob/main/fotos_documentacion_lambda/foto3.png
+**foto3**
 
 * Los paths de instalación están especificados en el bash de instalación de chrome y chromedriver, script el cual se abordará más adelante en el documento
 
@@ -235,18 +235,18 @@ Antes de crear el cron job para la ejecución automática es necesario crear una
 
 Buscando Lambda en la consola de AWS, se nos brindara la opción de crear una nueva función Lambda
 
-https://github.com/Nick2611/CuandoLlegaMoqsa/blob/main/fotos_documentacion_lambda/foto4.png
+**foto4**
 
 ### Paso 2- Definir parámetros de la función
 
 Para continuar con este paso, debemos haber realizado el push de la Docker image a ECR para poder utilizarla con la función Lambda
 
 Elegimos Container Image para asignar la Docker Image a la función  
-https://github.com/Nick2611/CuandoLlegaMoqsa/blob/main/fotos_documentacion_lambda/foto5.png
+**foto5**
 
 Seleccionamos Browse images y elegimos nuestro repositorio de ECR donde esta la imagen de nuestro programa, marcamos la imagen para continuar
 
-https://github.com/Nick2611/CuandoLlegaMoqsa/blob/main/fotos_documentacion_lambda/foto6.png
+**foto6**  
 Una vez asignada a la imagen, se procede a clickear el botón “Crear función” para finalizar con la creación del Lambda.
 
 ### Crear el lambda trigger con EventBridge
@@ -267,14 +267,14 @@ Donde:
 * **\*** significa cualquier valor válido
 
 Al final de los pasos, nuestra configuración debe resultar de la siguiente manera y estará lista para ser creada y utilizada con la función  
-https://github.com/Nick2611/CuandoLlegaMoqsa/blob/main/fotos_documentacion_lambda/foto7.png
+**foto7**
 
 ## Creación del SNS Topic y Test del script
 
 Finalmente, la forma más óptima y barata de utilizar el script para el beneficio de los usuarios registrados es publicar los horarios vía mail con un SNS Topic. El tier gratuito de AWS garantiza que los primeros 100.000 emails son totalmente gratuitos, lo cual para los propósitos y el scope general que va a tener esta función implica que seremos notificados de forma gratuita de los horarios del ramal seleccionado.
 
 Dentro de SNS, en el apartado Topics, buscamos la opción de **Create topic** y se ha de seleccionar en el tipo de tópico el **Standard**, debido a que es el que permite subscribirse al mismo via Mail  
-https://github.com/Nick2611/CuandoLlegaMoqsa/blob/main/fotos_documentacion_lambda/foto8.png
+**foto8**
 
 No es necesario realizar más modificaciones.
 
@@ -282,7 +282,7 @@ Una vez creado, se ha de crear una suscripción a él con un correo electrónico
 Desde el apartado de Subscriptions dentro de Amazon SNS, se clickea en la opción de Create subscription y se elige el topic ARN del tópico recién creado. A continuación, se ha de ingresar un mail al que se disponga acceso debido a que se enviará un mail de confirmación de suscripción al tópico
 
 Se debe utilizar el ARN del tópico a suscribir.  
-https://github.com/Nick2611/CuandoLlegaMoqsa/blob/main/fotos_documentacion_lambda/foto9.png
+**foto9**
 
 ### Importante
 
@@ -290,4 +290,4 @@ https://github.com/Nick2611/CuandoLlegaMoqsa/blob/main/fotos_documentacion_lambd
 
 Una vez creado el tópico y confirmada la suscripción, solo queda agregar el Topic ARN a la función Lambda para recibir notificaciones sobre los tiempos de espera de los colectivos cada vez que se ejecute.
 
- https://github.com/Nick2611/CuandoLlegaMoqsa/blob/main/fotos_documentacion_lambda/foto10.png
+**foto10**  
