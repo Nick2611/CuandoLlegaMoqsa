@@ -1,4 +1,4 @@
-# CuandoLlegaMoqsa
+# CuantoFaltaMoqsa
 
 ## Que es Moqsa
 
